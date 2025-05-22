@@ -5,17 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.e_commerceapp.adapter.CategoryAdapter
 import com.example.e_commerceapp.databinding.FragmentDashboardBinding
 import com.example.e_commerceapp.model.Category
-import com.example.e_commerceapp.model.CategoryResponse
+import com.example.e_commerceapp.repository.category.CategoryRepositoryImp
 import com.example.e_commerceapp.service.Retrofit
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.e_commerceapp.viewmodel.DashboardFragmentViewModel
+import com.example.e_commerceapp.viewmodel.createFactory
 
 
 class DashboardFragment : Fragment() {
@@ -25,10 +25,18 @@ class DashboardFragment : Fragment() {
     lateinit var categories: List<Category>
     lateinit var adapter: CategoryAdapter
     lateinit var recyclerView: RecyclerView
+    private lateinit var viewModel:DashboardFragmentViewModel
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val factory = DashboardFragmentViewModel(
+            CategoryRepositoryImp(Retrofit.api)
+        ).createFactory()
+
+        viewModel = ViewModelProvider(this, factory)[DashboardFragmentViewModel::class.java]
 
     }
 
@@ -57,33 +65,22 @@ class DashboardFragment : Fragment() {
 
 
     fun getCategories() {
-        val call = Retrofit.api.getCategories()
-        call.enqueue(object : Callback<CategoryResponse> {
-            override fun onResponse(
-                call: Call<CategoryResponse>,
-                response: Response<CategoryResponse>
-            ) {
-                if (response.isSuccessful && response.body() != null) {
-                    response.body().let {
-                        categories = it!!.categories
-                        adapter = CategoryAdapter(categories)
-                        recyclerView.adapter = adapter
-                        initializeCategoryOnClickListener()
-                    }
-                }
-            }
 
-            override fun onFailure(call: Call<CategoryResponse>, t: Throwable) {
-                println(t.localizedMessage)
-            }
-        })
+        viewModel.categories.observe(viewLifecycleOwner){
+            categories = it
+            adapter = CategoryAdapter(categories)
+            recyclerView.adapter = adapter
+            initializeCategoryOnClickListener()
+
+        }
+
     }
 
     private fun initializeCategoryOnClickListener() {
 
         adapter.ItemClickListener { position ->
 
-            println("${categories[position].categoryName} clicked !!!")
+
 
             val action=DashboardFragmentDirections.actionDashboardFragmentToSubCategoryFragment(categories[position].categoryId)
 

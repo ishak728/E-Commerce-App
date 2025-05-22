@@ -54,9 +54,9 @@ class SearchResultFragment : Fragment() {
     }
 
      fun searchQuery(query: String) {
-        println(0)
+
         val call= Retrofit.api.searchProduct(query)
-        println(1)
+
         call.enqueue(object : Callback<SearchResponse> {
             override fun onResponse(
                 call: Call<SearchResponse>,

@@ -6,21 +6,36 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.example.e_commerceapp.R
 import com.example.e_commerceapp.databinding.FragmentLoginBinding
 import com.example.e_commerceapp.model.LoginRequest
 import com.example.e_commerceapp.model.RegisterRequest
 import com.example.e_commerceapp.model.RegisterResponse
+import com.example.e_commerceapp.repository.auth.AuthRepositoryImpl
+import com.example.e_commerceapp.repository.category.CategoryRepositoryImp
 import com.example.e_commerceapp.service.Retrofit
 import com.example.e_commerceapp.util.makeToast
+import com.example.e_commerceapp.viewmodel.DashboardFragmentViewModel
+import com.example.e_commerceapp.viewmodel.LoginFragmentViewModel
+import com.example.e_commerceapp.viewmodel.createFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
+
+    private lateinit var viewModel:LoginFragmentViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val factory = LoginFragmentViewModel(
+            AuthRepositoryImpl(Retrofit.api)
+        ).createFactory()
+
+        viewModel = ViewModelProvider(this, factory)[LoginFragmentViewModel::class.java]
+
 
     }
 
@@ -61,31 +76,19 @@ class LoginFragment : Fragment() {
     }
 
     private fun login(loginRequest: LoginRequest) {
-        val call=Retrofit.api.loginUser(loginRequest)
+        viewModel.loginUser(loginRequest)
+        viewModel.status.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                0 -> {
 
-        call.enqueue(object:Callback<RegisterResponse>{
-            override fun onResponse(
-                call: Call<RegisterResponse>,
-                response: Response<RegisterResponse>
-            ) {
-                if (response.isSuccessful && response.body()!=null){
-                    if (response.body()?.status==0 ){
-                        response.body()?.message?.let { makeToast(it,requireContext()) }
-
-                        val intent=Intent(requireContext(),HostActivity::class.java)
-                        startActivity(intent)
-                        requireActivity().finish()
-
-                    }else{
-                        response.body()?.message?.let { makeToast(it,requireContext()) }
-                    }
+                    val intent = Intent(requireContext(), HostActivity::class.java)
+                    startActivity(intent)
+                }
+                1 -> {
+                   makeToast("Login failed",requireContext())
                 }
             }
-
-            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-               makeToast("Failure",requireContext())
-            }
-        })
+        }
     }
 
     fun LoginRequest.isNotEmpty(): Boolean {

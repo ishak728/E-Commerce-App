@@ -3,9 +3,11 @@ package com.example.e_commerceapp.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.e_commerceapp.constants.Constants
 import com.example.e_commerceapp.databinding.ItemCategoryBinding
 import com.example.e_commerceapp.model.Category
 import com.example.e_commerceapp.model.ItemClickListener
+import com.example.e_commerceapp.service.Retrofit
 import com.example.e_commerceapp.util.placeImage
 
 class CategoryAdapter(val categories:List<Category>):RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() ,ItemClickListener{
@@ -26,7 +28,9 @@ class CategoryAdapter(val categories:List<Category>):RecyclerView.Adapter<Catego
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
        val category=categories[position]
         holder.binding.tvCategoryName.text=category.categoryName
-        holder.binding.ivCategoryImage.placeImage(category.categoryImage)
+        val imageUrl = Constants.IMAGE_URL+ category.categoryImage
+        holder.binding.ivCategoryImage.placeImage(imageUrl)
+
         holder.itemView.setOnClickListener{
            onClickListener(position)
         }

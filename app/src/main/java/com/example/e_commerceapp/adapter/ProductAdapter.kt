@@ -3,9 +3,11 @@ package com.example.e_commerceapp.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.e_commerceapp.constants.Constants
 import com.example.e_commerceapp.databinding.ProductViewBinding
 import com.example.e_commerceapp.model.ItemClickListener
 import com.example.e_commerceapp.model.Product
+import com.example.e_commerceapp.util.placeImage
 
 class ProductAdapter(private val productList: List<Product>) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
@@ -30,6 +32,8 @@ class ProductAdapter(private val productList: List<Product>) :
             tvRating.text = "Rating: ${product.averageRating}"
             tvCategory.text = product.categoryName
             tvSubCategory.text = product.subCategoryName
+            println(product.productImageUrl)
+            ivProductImage.placeImage(Constants.IMAGE_URL+product.productImageUrl)
 
 
         }

@@ -7,12 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.example.e_commerceapp.R
 import com.example.e_commerceapp.databinding.FragmentRegisterBinding
 import com.example.e_commerceapp.model.RegisterRequest
 import com.example.e_commerceapp.model.RegisterResponse
+import com.example.e_commerceapp.repository.auth.AuthRepositoryImpl
 import com.example.e_commerceapp.service.Retrofit
 import com.example.e_commerceapp.util.makeToast
+import com.example.e_commerceapp.viewmodel.LoginFragmentViewModel
+import com.example.e_commerceapp.viewmodel.RegisterFragmentViewModel
+import com.example.e_commerceapp.viewmodel.createFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,9 +25,18 @@ import retrofit2.Response
 class RegisterFragment : Fragment() {
 
     lateinit var binding: FragmentRegisterBinding
+    lateinit var viewModel:RegisterFragmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val factory = RegisterFragmentViewModel(
+            AuthRepositoryImpl(Retrofit.api)
+        ).createFactory()
+
+        viewModel = ViewModelProvider(this, factory)[RegisterFragmentViewModel::class.java]
+
+
 
     }
 
@@ -62,31 +76,22 @@ class RegisterFragment : Fragment() {
     }
 
     private fun register(request: RegisterRequest) {
-        val call = Retrofit.api.registerUser(request)
 
-        call.enqueue(object : Callback<RegisterResponse> {
-            override fun onResponse(
-                call: Call<RegisterResponse>,
-                response: Response<RegisterResponse>
-            ) {
-               if (response.isSuccessful && response.body()!=null){
-                   if (response.body()?.status==0 ){
-                       response.body()?.message?.let { makeToast(it,requireContext()) }
+        viewModel.registerUser(request)
 
-                       val intent= Intent(requireContext(),HostActivity::class.java)
-                       startActivity(intent)
-                       requireActivity().finish()
-                   }else{
-                       response.body()?.message?.let { makeToast(it,requireContext()) }
-                   }
-               }
+        viewModel.status.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                0 -> {
+
+                    val intent= Intent(requireContext(),HostActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }
+                1 -> {
+                    makeToast("failed",requireContext())
+                }
             }
-
-            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-                println(t.localizedMessage)
-
-            }
-        })
+        }
     }
 
 
