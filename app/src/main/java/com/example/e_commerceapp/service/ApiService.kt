@@ -68,7 +68,7 @@ interface ApiService {
     @POST("User/address")
     fun addDeliveryAddress(
         @Body addAddressRequest: AddAddressRequest
-    )
+    ):Call<RegisterResponse>
 
     @GET("User/addresses/{user_id}")
     fun getUserAddresses(

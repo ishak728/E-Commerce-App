@@ -6,6 +6,9 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -24,6 +27,20 @@ class HostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding=ActivityHostBinding.inflate(layoutInflater)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                systemBars.bottom
+            )
+            insets
+        }
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContentView(binding.root)
 
          initialize()
@@ -35,7 +52,14 @@ class HostActivity : AppCompatActivity() {
         val navCon=(supportFragmentManager.findFragmentById(R.id.fragmentContainerView2) as NavHostFragment).navController
 
         appBarConfig=AppBarConfiguration(
-            setOf(R.id.dashboardFragment,R.id.cartFragment,R.id.ordersFragment,R.id.profileFragment,R.id.logoutFragment,),
+            setOf(
+                R.id.dashboardFragment,
+                R.id.cartFragment,
+                R.id.ordersFragment,
+                R.id.profileFragment,
+                R.id.logoutFragment,
+                R.id.addressesFragment
+                ),
             binding.drawerLayout
         )
 

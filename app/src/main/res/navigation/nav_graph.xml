@@ -41,22 +41,36 @@
     </fragment>
     <fragment
         android:id="@+id/cartFragment"
-        android:name="com.example.e_commerceapp.CartFragment"
+        android:name="com.example.e_commerceapp.view.CartFragment"
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" />
     <fragment
         android:id="@+id/ordersFragment"
-        android:name="com.example.e_commerceapp.OrdersFragment"
+        android:name="com.example.e_commerceapp.view.OrdersFragment"
         android:label="fragment_orders"
         tools:layout="@layout/fragment_orders" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.e_commerceapp.ProfileFragment"
+        android:name="com.example.e_commerceapp.view.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/logoutFragment"
-        android:name="com.example.e_commerceapp.LogoutFragment"
+        android:name="com.example.e_commerceapp.view.LogoutFragment"
         android:label="fragment_logout"
         tools:layout="@layout/fragment_logout" />
+    <fragment
+        android:id="@+id/addressesFragment"
+        android:name="com.example.e_commerceapp.view.AddressesFragment"
+        android:label="fragment_addresses"
+        tools:layout="@layout/fragment_addresses" >
+        <action
+            android:id="@+id/action_addressesFragment_to_addAddressFragment"
+            app:destination="@id/addAddressFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addAddressFragment"
+        android:name="com.example.e_commerceapp.view.AddAddressFragment"
+        android:label="fragment_add_address"
+        tools:layout="@layout/fragment_add_address" />
 </navigation>

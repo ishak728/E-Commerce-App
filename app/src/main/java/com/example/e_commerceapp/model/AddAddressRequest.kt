@@ -14,3 +14,4 @@ data class AddAddressRequest(
     @SerializedName("address")
     val address: String
 )
+
