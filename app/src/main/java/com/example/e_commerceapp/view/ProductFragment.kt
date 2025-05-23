@@ -61,7 +61,7 @@ class ProductFragment : Fragment() {
             ) {
                 if (response.isSuccessful && response.body() != null) {
                      allProducts = response.body()!!.products
-                    adapter=ProductAdapter(allProducts)
+                    adapter=ProductAdapter(allProducts,requireContext())
                     binding.rvProducts.adapter=adapter
 
 

@@ -54,5 +54,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Subcategory" />
+        <Button
+            android:id="@+id/btnAddToCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add to Cart"
+            android:backgroundTint="#2196F3"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="end"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

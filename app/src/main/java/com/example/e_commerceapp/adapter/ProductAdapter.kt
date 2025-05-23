@@ -1,16 +1,23 @@
 package com.example.e_commerceapp.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.e_commerceapp.constants.Constants
 import com.example.e_commerceapp.databinding.ProductViewBinding
 import com.example.e_commerceapp.model.ItemClickListener
+import com.example.e_commerceapp.model.OrderItem
 import com.example.e_commerceapp.model.Product
+import com.example.e_commerceapp.service.dblocal.Dao
+import com.example.e_commerceapp.util.makeToast
 import com.example.e_commerceapp.util.placeImage
 
-class ProductAdapter(private val productList: List<Product>) :
+class ProductAdapter(private val productList: List<Product>,val contex:Context) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+
+        val dao=Dao(contex)
+
 
 //    private lateinit var onClickListener:(Int)->Unit
 
@@ -26,6 +33,7 @@ class ProductAdapter(private val productList: List<Product>) :
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = productList[position]
+
         holder.binding.apply {
             tvProductName.text = product.productName
             tvPrice.text = "$${product.price}"
@@ -35,8 +43,26 @@ class ProductAdapter(private val productList: List<Product>) :
             println(product.productImageUrl)
             ivProductImage.placeImage(Constants.IMAGE_URL+product.productImageUrl)
 
+        }
+        holder.binding.btnAddToCart.setOnClickListener {
+
+            val orderItem=OrderItem(product.productId.toInt(),1,product.price.toInt())
+
+           val result= dao.addOrder(orderItem)
+            if (result){
+                println(1)
+                makeToast("Added to Cart",contex)
+            }else{
+                println(2)
+                makeToast("Try Again",contex)
+            }
+            println("ishak")
+            println(dao.getOrders())
+
 
         }
+
+
 
 //        holder.itemView.setOnClickListener{
 //            onClickListener(position)
