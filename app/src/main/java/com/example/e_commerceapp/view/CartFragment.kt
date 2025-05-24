@@ -18,6 +18,7 @@ import com.example.e_commerceapp.model.ProductDetailResponse
 import com.example.e_commerceapp.repository.cart.CartRepositoryImpl
 import com.example.e_commerceapp.service.Retrofit
 import com.example.e_commerceapp.service.dblocal.Dao
+import com.example.e_commerceapp.service.local.AppDatabase
 import com.example.e_commerceapp.viewmodel.CartFragmentViewModel
 import com.example.e_commerceapp.viewmodel.createFactory
 
@@ -37,7 +38,7 @@ class CartFragment : Fragment() {
         val factory = CartFragmentViewModel(
             CartRepositoryImpl(
                 Retrofit.api,
-                Dao(requireContext())
+                AppDatabase.getAppDatabase(requireContext()).getDao()
             )
         ).createFactory()
 

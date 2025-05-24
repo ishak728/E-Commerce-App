@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.safe.arg)
+    kotlin("kapt")
 }
 
 android {
@@ -58,6 +59,13 @@ dependencies {
     implementation (libs.picasso)
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+
+    implementation("androidx.room:room-runtime:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+
+    // To use Kotlin Symbol Processing (KSP)
+    kapt("androidx.room:room-compiler:2.6.1")
+
 
 
 }

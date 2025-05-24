@@ -10,13 +10,15 @@ import com.example.e_commerceapp.model.ItemClickListener
 import com.example.e_commerceapp.model.OrderItem
 import com.example.e_commerceapp.model.Product
 import com.example.e_commerceapp.service.dblocal.Dao
+import com.example.e_commerceapp.service.local.AppDatabase
 import com.example.e_commerceapp.util.makeToast
 import com.example.e_commerceapp.util.placeImage
 
 class ProductAdapter(private val productList: List<Product>,val contex:Context) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
-        val dao=Dao(contex)
+        val database=AppDatabase.getAppDatabase(contex)
+        val dao= database.getDao()
 
 
 //    private lateinit var onClickListener:(Int)->Unit
@@ -49,15 +51,8 @@ class ProductAdapter(private val productList: List<Product>,val contex:Context) 
             val orderItem=OrderItem(product.productId.toInt(),1,product.price.toInt())
 
            val result= dao.addOrder(orderItem)
-            if (result){
-                println(1)
-                makeToast("Added to Cart",contex)
-            }else{
-                println(2)
-                makeToast("Try Again",contex)
-            }
-            println("ishak")
-            println(dao.getOrders())
+            makeToast("Added to Cart",contex)
+
 
 
         }

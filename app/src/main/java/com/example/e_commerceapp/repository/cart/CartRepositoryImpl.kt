@@ -4,9 +4,10 @@ import com.example.e_commerceapp.model.OrderItem
 import com.example.e_commerceapp.model.ProductDetailResponse
 import com.example.e_commerceapp.service.ApiService
 import com.example.e_commerceapp.service.dblocal.Dao
+import com.example.e_commerceapp.service.local.OrderDao
 import retrofit2.Call
 
-class CartRepositoryImpl(val apiService: ApiService,val dao: Dao):CartRepository {
+class CartRepositoryImpl(val apiService: ApiService,val dao: OrderDao):CartRepository {
     override fun getOrderItemsFromDao(): List<OrderItem> {
         return dao.getOrders()
     }
